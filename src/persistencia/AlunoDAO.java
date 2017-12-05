@@ -2,6 +2,7 @@ package persistencia;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import entidade.Aluno;
 
@@ -82,6 +83,46 @@ public class AlunoDAO extends ConnectionDAO {
 			if(stmt != null)
 				stmt.close();
 		}
+	}
+	
+	private Aluno createAluno(ResultSet rs) throws SQLException {
+				
+		Aluno aluno = new Aluno();
+		
+		aluno.setId(rs.getLong(1));
+		aluno.setMatricula(rs.getInt(2));
+		aluno.setNome(rs.getString(3));
+		aluno.setEmail(rs.getString(4));
+		aluno.setNota01(rs.getDouble(5));
+		aluno.setNota02(rs.getDouble(6));
+		return aluno;
+		
+	
+	}
+	
+	public Aluno getAlunoBymatricula(Integer matricula) throws SQLException{
+		
+		PreparedStatement stmt = null;
+		Aluno aluno = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.prepareStatement("select * from aluno where matricula = ?");
+			stmt.setInt(1,  matricula);
+			
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				aluno = createAluno(rs);
+			}
+		}finally {
+			if(conn != null)
+				conn.close();
+			if(stmt != null)
+				stmt.close();
+			if(rs !=null)
+				rs.close();
+		}
+		
+		return aluno;
 	}
 }
 	
