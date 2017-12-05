@@ -39,4 +39,49 @@ public class AlunoDAO extends ConnectionDAO {
 				stmt.close();
 		}
 	}
+
+// método responsável por editar os dados do aluno no BD
+
+	public void editRegistro(Aluno a) throws SQLException{
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement("update aluno set nome = ?, email = ? where id = ?");
+			
+			stmt.setString(1, a.getNome());
+			stmt.setString(2, a.getEmail());
+			stmt.setDouble(3, a.getId());
+			
+			int flag = stmt.executeUpdate();
+			
+			if(flag == 0)
+				throw new SQLException("Erro ao editar os dados do aluno");
+		} finally {
+			if (conn != null)
+				conn.close();
+			if (stmt != null)
+				stmt.close();
+			
+		}
+	}
+	
+	// método responsável por excluir o aluno no BD
+	
+	public void deleteRegistro(Long id) throws SQLException{
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement("delete from aluno where id = ?");
+			
+			stmt.setDouble(1, id);
+			int flag = stmt.executeUpdate();
+			
+			if(flag ==0)
+				throw new SQLException("Erro ao excluir os dados do aluno");
+		}finally {
+			if(conn != null)
+				conn.close();
+			if(stmt != null)
+				stmt.close();
+		}
+	}
 }
+	
